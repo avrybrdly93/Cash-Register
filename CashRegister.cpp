@@ -1,6 +1,5 @@
 #include <iostream>
 #include <iomanip>
-using namespace std;
 
 int main() {
 	double TotalCost;
@@ -26,13 +25,13 @@ int main() {
 	bool BillChange = false;
 	int ChangeVar;
 
-	cout << "What is the total cost?" << endl;
-	cin >> TotalCost;
-	cout << "How much cash was received?" << endl;
-	cin >> CashReceived;
+	std::cout << "What is the total cost?" << std::endl;
+	std::cin >> TotalCost;
+	std::cout << "How much cash was received?" << std::endl;
+	std::cin >> CashReceived;
 	Change = CashReceived - TotalCost;
-	cout << setprecision(2) << fixed;
-	cout << "You should give $" <<  Change << " in change." << endl;
+	std::cout << setprecision(2) << fixed;
+	std::cout << "You should give $" <<  Change << " in change." << std::endl;
 	
 	if (Change > 1) {
 		ChangeBills = Change;
@@ -60,17 +59,16 @@ int main() {
 	NumPennies = ChangeAfterN;
 
 	if (BillChange) {
-		cout << "The change is " << NumTwenties << " twenties, " << NumTens
+		std::cout << "The change is " << NumTwenties << " twenties, " << NumTens
 			 << " tens, " << NumFives << " fives, and " << NumOnes << " ones, "
 			 << NumQuarters << " quarters, " << NumDimes << " dimes, "
 			 << NumNickels << " nickels, and " << NumPennies << " pennies."
-		   	<< endl;
+		   	<< std::endl;
 	}
 	if (!BillChange) {
-		cout << "This would be best given by giving "
+		std::cout << "This would be best given by giving "
 		 << NumQuarters << " quarters, " << NumDimes << " dimes, "
 		 << NumNickels << " nickels, and " << NumPennies << " pennies."
-		 << endl;
+		 << std::endl;
 		}
-
 }
