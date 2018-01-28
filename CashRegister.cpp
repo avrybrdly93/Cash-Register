@@ -30,7 +30,7 @@ int main() {
 	std::cout << "How much cash was received?" << std::endl;
 	std::cin >> CashReceived;
 	Change = CashReceived - TotalCost;
-	std::cout << setprecision(2) << fixed;
+	std::cout << std::setprecision(2) << std::fixed;
 	std::cout << "You should give $" <<  Change << " in change." << std::endl;
 	
 	if (Change > 1) {
