@@ -50,8 +50,6 @@ int main() {
 
 	if (Change < 1) {
 		Cents = static_cast<int>(Change) * 100;
-		//cout << Cents << endl;;
-		//cout << Change << endl;
 	}
 	NumQuarters = Cents / 25;
 	ChangeAfterQ = Cents % 25;
