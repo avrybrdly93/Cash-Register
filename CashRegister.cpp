@@ -24,8 +24,15 @@ std::list<std::list<int>> changeExciting;
 // numTotalCents sets the limit for the total individual cases. The number is converted into a dollar amount by
 // dividing by 100. 18641 is $186.41 which is one of each type of bill and one of each type of coin.
 
-int numTotalCents = 18641;
+std::vector<int> numTotalCents;
 double amtGiven;
+
+ std::vector<int> populateTotalCentsVector() {
+    for(int item : numTotalCents) {
+        numTotalCents.insert(numTotalCents.end(), item);
+    }
+     return numTotalCents;
+}
 
 clock_t StartTimer() {
     clock_t startTime = clock();
@@ -53,16 +60,19 @@ std::vector<double> createCostAmtGiven() {
     std::list<double> amtGivenList;
     std::list<double> differenceList;
 
-    for(int i = 0; i < numTotalCents; i++) {
-        cost += 0.01;
-        costList.push_back(cost);
-        amtGivenList.push_back(cost);
+    for(int item : numTotalCents) {
+        std::cout << item << " " << std::endl;
+        for(int i = 0; i < numTotalCents[item]; i++) {
+            cost += 0.01;
+            costList.push_back(cost);
+            amtGivenList.push_back(cost);
         }
-    amtGiven = static_cast<double>(numTotalCents) / 100;
+    amtGiven = static_cast<double>(numTotalCents[item]) / 100;
     
     for(double cost : costList) {
         double difference = amtGiven - cost;
         costAmtGivenList.insert(costAmtGivenList.end(), difference);
+        }
     }
 
     return costAmtGivenList;
@@ -198,63 +208,66 @@ int main() {
     clock_t excitingStartTime = StartTimer();
     excitingList = excitingApproach(costAmtGivenList);
     clock_t excitingTime = StopTimer(excitingStartTime);
-    int i = numTotalCents - 1;
-    std::cout << "Boring Method: " << std::endl;
-    for(std::list<int> boringCoins : boringList) {
-        for(int boringCoin : boringCoins) {
+    for(int item : numTotalCents) {
+        int i = item - 1;
+        std::cout << "Boring Method: " << std::endl;
+        for(std::list<int> boringCoins : boringList) {
+            for(int boringCoin : boringCoins) {
+                if(i < 20) {
+                    std::cout << boringCoin;
+                }
+            }
+            double totalAmount = multiplyChange(boringCoins);
+            i--;
+            double difference = totalAmount - costAmtGivenList[i];
+            if(difference > 0.005 && i > 0) {
+                hasDifference = true;
+                errorsList.push_back(difference);
+            }
+    
             if(i < 20) {
-                std::cout << boringCoin;
+                std::cout << std::endl;
+            }
+            fileBoring << "\n";
+        }
+        std::cout << " " << std::endl;
+    
+        std::cout << "Exciting Approach: " << std::endl;
+        for(std::list<int> excitingCoins : excitingList) {
+            for(int excitingCoin : excitingCoins) {
+                if(i < 20) {
+                    std::cout << " " << excitingCoin << " ";
+                    }
+            }
+                    double totalAmount = multiplyChange(excitingCoins);
+            i--;
+            if(i < 20) {
+                std::cout << " "<< i;
+            }
+    
+            double difference = totalAmount - costAmtGivenList[i];
+            if(i < 20) {
+                       std::cout << "Difference: " << difference;
+                std::cout << std::endl;
+            }
+    
+            if(difference > 0.005 && i > 0) {
+                hasDifference = true;
+                errorsList.push_back(difference);
             }
         }
-        double totalAmount = multiplyChange(boringCoins);
-        i--;
-        double difference = totalAmount - costAmtGivenList[i];
-        if(difference > 0.005 && i > 0) {
-            hasDifference = true;
-            errorsList.push_back(difference);
-        }
-
-        if(i < 20) {
-            std::cout << std::endl;
-        }
-        fileBoring << "\n";
-    }
-    std::cout << " " << std::endl;
-
-    std::cout << "Exciting Approach: " << std::endl;
-    for(std::list<int> excitingCoins : excitingList) {
-        for(int excitingCoin : excitingCoins) {
-            if(i < 20) {
-                std::cout << " " << excitingCoin << " ";
-                }
-        }
-                double totalAmount = multiplyChange(excitingCoins);
-        i--;
-        if(i < 20) {
-            std::cout << " "<< i;
-        }
-
-        double difference = totalAmount - costAmtGivenList[i];
-        if(i < 20) {
-                   std::cout << "Difference: " << difference;
-            std::cout << std::endl;
-        }
-
-        if(difference > 0.005 && i > 0) {
-            hasDifference = true;
-            errorsList.push_back(difference);
-        }
-    }
-
-    std::cout << "Boring time: " << (float)boringTime / CLOCKS_PER_SEC << std::endl;
-    std::cout << "Exciting time: " << (float)excitingTime / CLOCKS_PER_SEC << std::endl;
-
-    if(hasDifference == false) {
-            std::cout << "Perfect, no errors here!:";
+    
+        std::cout << "Boring time: " << (float)boringTime / CLOCKS_PER_SEC << std::endl;
+        std::cout << "Exciting time: " << (float)excitingTime / CLOCKS_PER_SEC << std::endl;
+    
+        if(hasDifference == false) {
+                std::cout << "Perfect, no errors here!:";
         } else {
             std::cout << " There were errors :(((( ";
             for(int error : errorsList) {
                 std::cout << error << std::endl;
             }
         }
+    }
 }
+    
