@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <list>
+#include <fstream>
 //#include <CL/opencl.hpp>
 //#define CL_HPP_ENABLE_EXCEPTIONS   
 
@@ -14,20 +15,13 @@ bool alreadyNegative = false;
 
 int randTest = rand();
 
-// Array of 10 random values 
-//std::list<double> costsOfItems = {0.01, 0.08, 0.15, 0.26, 0.83, 0.47, 0.63, 0.79, 0.11, 0.85, 0.02, 0.10};
 std::list<std::list<int>> changeBoring;
 std::list<std::list<int>> changeExciting;
 
 // numTotalCents sets the limit for the total individual cases. The number is converted into a dollar amount by
-// dividing by 100
-// Values and times in seconds for CPU:
-// 100000 - 277.421
-// 10000 -  23.537
-// 1000 - 2.767
-// 100 - 0.476 seconds
-// 10 - 0.029
-int numTotalCents = 200;
+// dividing by 100. 18641 is $186.41 which is one of each type of bill and one of each type of coin.
+
+int numTotalCents = 18641;
 double amtGiven;
 
 clock_t StartTimer() {
@@ -57,88 +51,53 @@ std::list<double> createCostAmtGiven() {
     std::list<double> differenceList;
 
     for(int i = 0; i < numTotalCents; i++) {
+        cost += 0.01;
         costList.push_back(cost);
         amtGivenList.push_back(cost);
-        cost += 0.01;
         }
-        std::cout << "asdf: " << numTotalCents;
     amtGiven = static_cast<double>(numTotalCents) / 100;
 
-    std::cout << "amtGiven: " << amtGiven << std::endl;
+    // std::cout << "amtGiven: " << amtGiven << std::endl;
     for(double cost : costList) {
-        std::cout << "Cost: " << cost << std::endl;
+        //std::cout << "Cost: " << cost << std::endl;
         double difference = amtGiven - cost;
-        std::cout << " " << difference << " ";
+        //std::cout << " " << difference << " ";
         costAmtGivenList.push_back(difference);
-        // for(double amtGiven : amtGivenList) {
-        //     double difference = amtGiven - cost;
-        //     differenceList.push_back(difference);
-        //     std::cout << " " << difference << " ";
-        // }
-        std::cout << std::endl;
-        //costAmtGivenMatrix.push_back(costList);
+        //std::cout << std::endl;
     }
 
     return costAmtGivenList;
 }
-
-
 std::list<std::list<int>> boringMethod(std::list<double> costsOfItems) {
     std::list<std::list<int>> boringList;
     std::list<int> coinsList;
-    // if (Change > 1) {
-	// 	ChangeBills = Change;
-    //     NumHundreds = ChangeBills / 100;
-    //     ChangeAfterHundreds = ChangeBills % 100;
-    //     NumFifties = ChangeAfterHundreds / 50;
-    //     ChangeAfterFifties = ChangeAfterHundreds % 50;
-	// 	NumTwenties = ChangeAfterTwenties / 20;
-	// 	ChangeAfterTwenties = ChangeAfterTwenties % 20;
-	// 	NumTens = ChangeAfterTwenties / 10;
-	// 	ChangeAfterTens = ChangeAfterTwenties % 10;
-	// 	NumFives = ChangeAfterTens / 5;
-	// 	ChangeAfterFives = ChangeAfterTens % 5;
-	// 	NumOnes = ChangeAfterFives;
-	// 	ChangeVar = 100 * Change;
-	// 	Cents = ChangeVar % 100; 
-	// 	BillChange = true;
-	// } else {
         for(double cost : costsOfItems) {  
-            // ChangeBills = Change;
-            // NumHundreds = ChangeBills / 100;
-            // ChangeAfterHundreds = ChangeBills % 100;
-            // NumFifties = ChangeAfterHundreds / 50;
-            // ChangeAfterFifties = ChangeAfterHundreds % 50;
-            // NumTwenties = ChangeAfterTwenties / 20;
-            // ChangeAfterTwenties = ChangeAfterTwenties % 20;
-            // NumTens = ChangeAfterTwenties / 10;
-            // ChangeAfterTens = ChangeAfterTwenties % 10;
-            // NumFives = ChangeAfterTens / 5;
-            // ChangeAfterFives = ChangeAfterTens % 5;
-            // NumOnes = ChangeAfterFives;
-            ChangeVar = 100 * Change;
-            Cents = ChangeVar % 100; 
             Change = CashReceived - cost;
-            Cents = Change * 100;
-            int Cents100 = Change * 100;
-            NumQuarters = Cents / 25;
-            ChangeAfterQ = Cents % 25;
+            ChangeBills = Change;
+            NumHundreds = ChangeBills / 100;
+            ChangeAfterHundreds = ChangeBills % 100;
+            NumFifties = ChangeAfterHundreds / 50;
+            ChangeAfterFifties = ChangeAfterHundreds % 50;
+            NumTwenties = ChangeAfterFifties / 20;
+            ChangeAfterTwenties = ChangeAfterFifties % 20;
+            NumTens = ChangeAfterTwenties / 10;
+            ChangeAfterTens = ChangeAfterTwenties % 10;
+            NumFives = ChangeAfterTens / 5;
+            ChangeAfterFives = ChangeAfterTens % 5;
+            NumOnes = ChangeAfterFives / 1;
+            ChangeAfterOnes = ChangeAfterFives % 1;
+            ChangeVar = (int)std::round(100 * Change);
+            ChangeAfterOnes = ChangeVar % 100;
+            NumQuarters = ChangeAfterOnes / 25; 
+            ChangeAfterQ = ChangeAfterOnes % 25;
             NumDimes = ChangeAfterQ / 10;
             ChangeAfterD = ChangeAfterQ % 10;
             NumNickels = ChangeAfterD / 5;
             ChangeAfterN = ChangeAfterD % 5;
             NumPennies = ChangeAfterN;   
-
-            for(int coin : coinsList) {
-                std::cout << "" << coin << " ";
-            }
-            std::cout << std::endl;
-           // std::cout << "Cents: " << Cents << ". Quarters: " << NumQuarters << " Change: " << Change << "\n" << Cents100;
-            coinsList = {NumHundreds, NumFifties, NumTwenties, NumTens, NumFives, NumOnes, NumDimes, NumNickels, NumPennies};
+            coinsList = {NumHundreds, NumFifties, NumTwenties, NumTens, NumFives, NumOnes, NumQuarters, NumDimes, NumNickels, NumPennies};
             boringList.push_back(coinsList);
         }
-	//}
-	
     return boringList;
 }
 
@@ -149,7 +108,6 @@ std::list<std::list<int>> excitingApproach(std::list<double> costsOfItems) {
     std::list<int> excitingCoins;
 
      for(double cost : costsOfItems) {  
-        //NumQuarters, NumNickels, NumDimes, NumPennies = 0,0,0,0;
         NumHundreds = 0;
         NumFifties = 0;
         NumTwenties = 0;
@@ -161,65 +119,45 @@ std::list<std::list<int>> excitingApproach(std::list<double> costsOfItems) {
         NumPennies = 0;
         NumDimes = 0;
         Change = CashReceived - cost;
-        ChangeVar = 100 * Change;
-        Cents = ChangeVar % 100; 
-        NumPennies = Cents;
+        NumPennies = (int)std::round(100 * Change);
         while(NumPennies > 4) {
             NumNickels++;
             NumPennies -= 5;
-            //printCoinAmounts(NumPennies, NumNickels, NumDimes, NumQuarters);
-            //std::cout << "pennies to nickels." << std::endl;
         }
         while(NumNickels > 4) {
             NumQuarters++;
             NumNickels -= 5;
-         //printCoinAmounts(NumPennies, NumNickels, NumDimes, NumQuarters);
-          //  std::cout << "nickels to quarters." << std::endl;
         }
-
         while(NumNickels > 1) {
             NumDimes++;
             NumNickels -= 2;
-        // printCoinAmounts(NumPennies, NumNickels, NumDimes, NumQuarters);
-        // std::cout << "nickels to dimes." << std::endl;
         }
-
         while(NumQuarters > 3) {
             NumOnes++;
             NumQuarters -= 4;
         }
-
         while(NumOnes > 4) {
             NumFives++;
             NumOnes -= 5;
         }
-
         while(NumFives > 1) {
             NumTens++;
             NumFives -= 2;
         }
-
         while(NumTens > 4) {
             NumFifties++;
             NumTens -= 5;
         }
-
         while(NumTens > 1) {
             NumTwenties++;
             NumTens -= 2;
         }
-
         while(NumFifties > 1) {
             NumHundreds++;
             NumFifties -= 2;
         }
 
-        for(int coin : excitingCoins) {
-                //std::cout << "" << coin << " ";
-            }
-        std::cout << std::endl;
-
-        excitingCoins = {NumHundreds, NumFifties, NumTwenties, NumTens, NumFives, NumOnes, NumDimes, NumNickels, NumPennies};
+        excitingCoins = {NumHundreds, NumFifties, NumTwenties, NumTens, NumFives, NumOnes, NumQuarters, NumDimes, NumNickels, NumPennies};
         excitingList.push_back(excitingCoins);
     }
 
@@ -227,80 +165,45 @@ std::list<std::list<int>> excitingApproach(std::list<double> costsOfItems) {
 }
 
 int main() {
+    std::ofstream fileBoring("boringFile.csv");
+    std::ofstream fileExciting("excitingFile.csv");
     
     // Modifyable variables
 	bool inputMode = false;
     bool weWantBoring = false;
 
-    //createCostAmtGiven();
-
     std::list<std::list<int>> boringList;
     std::list<std::list<int>> excitingList;
+    std::list<double> costAmtGivenList = createCostAmtGiven();
+    CashReceived = amtGiven;
 
-    if(inputMode) {
-        do {
-            if(alreadyNegative) {
-                std::cout << "The cost shouldn't be negative. Try entering a positive value." << std::endl;
-            } else {
-                std::cout << "What is the total cost?" << std::endl;
-            }
-            std::cin >> TotalCost;
+    clock_t boringStartTime = StartTimer();
+    //Both methods running to compare later
+    boringList = boringMethod(costAmtGivenList);
+    clock_t boringTime = StopTimer(boringStartTime);
+    clock_t excitingStartTime = StartTimer();
+    excitingList = excitingApproach(costAmtGivenList);
+    clock_t excitingTime = StopTimer(excitingStartTime);
 
-            alreadyNegative = true;
-        } while (TotalCost < 0);
-
-        if(TotalCost > 0) {
-            std::cout << "How much cash was received?" << std::endl;
-            std::cin >> CashReceived;
-            Change = CashReceived - TotalCost;
-            std::cout << std::setprecision(2) << std::fixed;
-            std::cout << "You should give $" <<  Change << " in change." << std::endl;
-        } else {
-            std::cout << "Please enter a valid amount." << std::endl;
+    std::cout << "Boring Method: " << std::endl;
+    for(std::list<int> boringCoins : boringList) {
+        for(int boringCoin : boringCoins) {
+            //std::cout << " " << boringCoin << " ";
+            fileBoring << boringCoin << ",";
         }
-    } else {
-        std::list<double> costAmtGivenList = createCostAmtGiven();
-        CashReceived = amtGiven;
-
-        clock_t boringStartTime = StartTimer();
-        //Both methods running to compare later
-        boringList = boringMethod(costAmtGivenList);
-        clock_t boringTime = StopTimer(boringStartTime);
-        clock_t excitingStartTime = StartTimer();
-        excitingList = excitingApproach(costAmtGivenList);
-        clock_t excitingTime = StopTimer(excitingStartTime);
-
-        for(std::list<int> boringCoins : boringList) {
-            for(int boringCoin : boringCoins) {
-                std::cout << " " << boringCoin << " ";
-            }
-            std::cout << "" << std::endl;
-        }
-        std::cout << " " << std::endl;
-        for(std::list<int> excitingCoins : excitingList) {
-            for(int excitingCoin : excitingCoins) {
-                std::cout << " " << excitingCoin << " ";
-            }
-            std::cout << "" << std::endl;
-        }
-
-        std::cout << "Boring time: " << (float)boringTime / CLOCKS_PER_SEC << std::endl;
-        std::cout << "Exciting time: " << (float)excitingTime / CLOCKS_PER_SEC << std::endl;
-
+        fileBoring << "\n";
     }
-    	if (BillChange) {
-		std::cout << "The change is " << NumTwenties << " twenties, " << NumTens
-			 << " tens, " << NumFives << " fives, and " << NumOnes << " ones, "
-			 << NumQuarters << " quarters, " << NumDimes << " dimes, "
-			 << NumNickels << " nickels, and " << NumPennies << " pennies."
-		   	<< std::endl;
-	} else {
-		std::cout << "This would be best given by giving "
-		 << NumQuarters << " quarters, " << NumDimes << " dimes, "
-		 << NumNickels << " nickels, and " << NumPennies << " pennies."
-		 << std::endl;
-		}
+    std::cout << " " << std::endl;
 
-       // clock_t stopTime = StopTimer(startTime);
-       // PrintTime(stopTime);
+    std::cout << "Exciting Approach: " << std::endl;
+    for(std::list<int> excitingCoins : excitingList) {
+        for(int excitingCoin : excitingCoins) {
+            //std::cout << " " << excitingCoin << " ";
+            fileExciting << excitingCoin << ",";
+        }
+        fileExciting << "\n";
+    }
+
+    std::cout << "Boring time: " << (float)boringTime / CLOCKS_PER_SEC << std::endl;
+    std::cout << "Exciting time: " << (float)excitingTime / CLOCKS_PER_SEC << std::endl;
 }
